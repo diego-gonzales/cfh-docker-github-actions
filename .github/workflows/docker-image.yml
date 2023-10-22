@@ -31,20 +31,22 @@ jobs:
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        NEW_VERSION: ${{steps.my_versioning.outputs.version}} 
       run: |
         echo "Starting authentication"
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         echo "Finished authentication"
-        echo "New version ---> $NEW_VERSION"
     
-    # - name: Build the Docker image
-    #   run: |
-    #     docker build -t diegoegj/graphql-app:0.0.2 .
-    #     docker build -t diegoegj/graphql-app:latest .
+    - name: Build the Docker image
+      env:
+        NEW_VERSION: ${{steps.my_versioning.outputs.version}} 
+      run: |
+        docker build -t diegoegj/graphql-app:$NEW_VERSION .
+        docker build -t diegoegj/graphql-app:latest .
 
-    # - name: Push image to Dockerhub
-    #   run: |
-    #     docker push diegoegj/graphql-app:0.0.2
-    #     docker push diegoegj/graphql-app:latest
+    - name: Push image to Dockerhub
+      env:
+        NEW_VERSION: ${{steps.my_versioning.outputs.version}} 
+      run: |
+        docker push diegoegj/graphql-app:$NEW_VERSION
+        docker push diegoegj/graphql-app:latest
 
