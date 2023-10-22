@@ -27,5 +27,10 @@ jobs:
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         echo "Finishing authentication"
     
-    # - name: Build the Docker image
-    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build the Docker image
+      run: |
+        docker build -t diegoegj/graphql-app:0.0.2 .
+
+    - name: Push image to Dockerhub
+      run: |
+        docker push diegoegj/graphql-app:0.0.2
