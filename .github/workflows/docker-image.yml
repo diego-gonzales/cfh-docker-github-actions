@@ -30,7 +30,9 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build -t diegoegj/graphql-app:0.0.2 .
+        docker build -t diegoegj/graphql-app:latest .
 
     - name: Push image to Dockerhub
       run: |
         docker push diegoegj/graphql-app:0.0.2
+        docker push diegoegj/graphql-app:latest
