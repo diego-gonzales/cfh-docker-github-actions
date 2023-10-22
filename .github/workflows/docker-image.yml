@@ -18,21 +18,33 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Git Semantic Version
+      # https://github.com/marketplace/actions/git-semantic-version?version=v4.0.3
+      uses: PaulHatch/semantic-version@v4.0.3
+      with:
+        major_pattern: "major:"
+        minor_pattern: "feat:"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
+      id: my_versioning
+
     - name: Dockerhub authentication
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        NEW_VERSION: ${{steps.my_versioning.outputs.version}} 
       run: |
         echo "Starting authentication"
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        echo "Finishing authentication"
+        echo "Finished authentication"
+        echo "New version ---> $NEW_VERSION"
     
-    - name: Build the Docker image
-      run: |
-        docker build -t diegoegj/graphql-app:0.0.2 .
-        docker build -t diegoegj/graphql-app:latest .
+    # - name: Build the Docker image
+    #   run: |
+    #     docker build -t diegoegj/graphql-app:0.0.2 .
+    #     docker build -t diegoegj/graphql-app:latest .
 
-    - name: Push image to Dockerhub
-      run: |
-        docker push diegoegj/graphql-app:0.0.2
-        docker push diegoegj/graphql-app:latest
+    # - name: Push image to Dockerhub
+    #   run: |
+    #     docker push diegoegj/graphql-app:0.0.2
+    #     docker push diegoegj/graphql-app:latest
+
